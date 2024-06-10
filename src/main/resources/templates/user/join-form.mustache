@@ -1,18 +1,18 @@
 {{>layout/header}}
 
 <div class="container">
-    <form action="#">
+    <form action="/join" method="post">
         <div class="mb-3 mt-3">
-            <input type="text" class="form-control" placeholder="Enter username" name="username">
+            <input type="text" class="form-control" placeholder="Enter username" name="username" value="cos">
         </div>
         <div class="mb-3 mt-3">
-            <input type="password" class="form-control" placeholder="Enter password" name="password">
+            <input type="password" class="form-control" placeholder="Enter password" name="password" value="1234">
         </div>
         <div class="mb-3 mt-3">
-            <input type="email" class="form-control" placeholder="Enter email" name="email">
+            <input type="email" class="form-control" placeholder="Enter email" name="email" value="cos@nate.com">
         </div>
         <div class="mb-3 mt-3">
-            <input type="text" class="form-control" placeholder="Enter fullname" name="fullname">
+            <input type="text" class="form-control" placeholder="Enter fullname" name="fullname" value="코스">
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>

@@ -32,6 +32,17 @@ public class UserRepository {
     }
 
     @Transactional
+    public void saveV2(String username, String password, String email, String fullname) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setFullname(fullname);
+
+        em.persist(user);
+    }
+
+    @Transactional
     public User findByUsernameAndPassword(String username, String password) {
         Query query =
                 em.createNativeQuery("select * from user_tb where username=? and password=?");
@@ -53,6 +64,38 @@ public class UserRepository {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public User findByUsernameAndPasswordV2(String username, String password) {
+        Query query =
+                em.createNativeQuery("select * from user_tb where username=? and password=?", User.class); // 엔티티
+        query.setParameter(1, username);
+        query.setParameter(2, password);
+
+        try {
+            // NOTE: user 클래스에 디폴트 생성자가 있어야 하이버네이트가 new를 해서 파싱해준다.
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
 
     }
+
+    public User findByUsernameAndPasswordV3(String username, String password) {
+        // JPQL
+        Query query =
+                em.createQuery("select u from User u where u.username=:username and u.password=:password", User.class); // 엔티티
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+
+        try {
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
 }

@@ -27,3 +27,7 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+  mustache:
+    servlet:
+      expose-session-attributes: true
+      expose-request-attributes: true
