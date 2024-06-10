@@ -17,6 +17,12 @@ public class UserController {
     private final HttpSession session;
     private final UserRepository userRepository;
 
+    @GetMapping("/logout")
+    public String logout() {
+        session.invalidate();
+        return "redirect:/login-form";
+    }
+
     @PostMapping("/login")
     public String login(String username, String password) {
         User sessionUser = userRepository.findByUsernameAndPasswordV2(username, password);
@@ -84,9 +90,4 @@ public class UserController {
         return "user/login-form";
     }
 
-    // 로그아웃
-    @GetMapping("/logout")
-    public String logout() {
-        return "redirect:/account/list";
-    }
 }
