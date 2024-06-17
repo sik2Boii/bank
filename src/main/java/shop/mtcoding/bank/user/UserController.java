@@ -1,6 +1,5 @@
 package shop.mtcoding.bank.user;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,8 @@ import java.io.IOException;
 public class UserController {
 
     private final HttpSession session;
-    private final UserRepository userRepository;
+    // STEP: 세번째 단계 (의존성 변경)
+    private final UserService userService;
 
     @GetMapping("/logout")
     public String logout() {
@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String username, String password) {
-        User sessionUser = userRepository.findByUsernameAndPasswordV2(username, password);
+    public String login(UserRequest.LoginDTO reqDTO) {
+        User sessionUser = userService.로그인(reqDTO);
         if (sessionUser == null) {
             throw new RuntimeException("아이디 혹은 패스워드가 틀렸습니다");
         } else {
@@ -34,32 +34,9 @@ public class UserController {
         }
     }
 
-    // V1
-    @GetMapping("/hello1")
-    public void hello(HttpServletResponse response) {
-        System.out.println("==========helloV1==========");
-        response.setHeader("Location", "http://localhost:8080/login-form");
-        response.setStatus(302);
-    }
-
-    // V2
-    @GetMapping("/hello2")
-    public String helloV2(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("==========helloV2==========");
-        return "redirect:/login-form";
-    }
-
-    // V3
-    @GetMapping("/hello3")
-    public void helloV3(HttpServletResponse response) throws IOException {
-        System.out.println("==========helloV3==========");
-        response.sendRedirect("/login-form");
-    }
-
-
-    @GetMapping("/test")
-    public void test(HttpServletResponse response) throws IOException {
-        // response.sendRedirect("/login-form");
+    @GetMapping("/test1")
+    public void test1(HttpServletResponse response) throws IOException {
+        //response.sendRedirect("/login-form");
         response.setHeader("Location", "http://localhost:8080/login-form");
         response.setStatus(302);
     }
@@ -68,26 +45,24 @@ public class UserController {
     // http1.1 - 사용중 Post, Get, Put, Delete
     // http1.0 - Post(insert, delete, update), Get(select)
     // Post(insert), Get(select)
-    @PostMapping("/join")
-    public String join(String username, String password, String email, String fullname) {
-        System.out.println("username: " + username);
-        System.out.println("password: " + password);
-        System.out.println("email: " + email);
-        System.out.println("fullname: " + fullname);
+    @PostMapping("/join") // 회원가입
+    public String join(UserRequest.JoinDTO reqDTO) {
+
+
+        // STEP: 네번째 단계
+        userService.회원가입(reqDTO);
 
         return "redirect:/login-form";
     }
 
-    // 회원가입
+
     @GetMapping("/join-form")
     public String joinForm() {
         return "user/join-form";
     }
 
-    // 로그인
     @GetMapping("/login-form")
     public String loginForm() {
         return "user/login-form";
     }
-
 }

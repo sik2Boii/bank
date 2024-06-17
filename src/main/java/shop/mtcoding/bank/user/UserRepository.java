@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor // final 변수를 초기화하는 생성자를 만들어준다.
 @Repository // ioc 등록
@@ -19,7 +18,6 @@ public class UserRepository {
 //        this.em = em;
 //    }
 
-    @Transactional
     public void save(String username, String password, String email, String fullname) {
         Query query =
                 em.createNativeQuery("insert into user_tb(username, password, email, fullname) values(?,?,?,?)");
@@ -31,7 +29,6 @@ public class UserRepository {
         query.executeUpdate(); // write (insert, delete, update)
     }
 
-    @Transactional
     public void saveV2(String username, String password, String email, String fullname) {
         User user = new User();
         user.setUsername(username);
@@ -42,7 +39,6 @@ public class UserRepository {
         em.persist(user);
     }
 
-    @Transactional
     public User findByUsernameAndPassword(String username, String password) {
         Query query =
                 em.createNativeQuery("select * from user_tb where username=? and password=?");
@@ -68,7 +64,7 @@ public class UserRepository {
 
     public User findByUsernameAndPasswordV2(String username, String password) {
         Query query =
-                em.createNativeQuery("select * from user_tb where username=? and password=?", User.class); // 엔티티
+                em.createNativeQuery("select * from user_tb where username=? and password=?", User.class);
         query.setParameter(1, username);
         query.setParameter(2, password);
 
@@ -79,13 +75,12 @@ public class UserRepository {
         } catch (Exception e) {
             return null;
         }
-
     }
 
     public User findByUsernameAndPasswordV3(String username, String password) {
         // JPQL
         Query query =
-                em.createQuery("select u from User u where u.username=:username and u.password=:password", User.class); // 엔티티
+                em.createQuery("select u from User u where u.username=:username and u.password=:password", User.class);
         query.setParameter("username", username);
         query.setParameter("password", password);
 
@@ -95,7 +90,20 @@ public class UserRepository {
         } catch (Exception e) {
             return null;
         }
-
     }
 
+    // STEP: 유저네임 중복체크 첫번째 단계
+    public User findByUsername(String username) {
+        // JPQL
+        Query query =
+                em.createQuery("select u from User u where u.username=:username", User.class);
+        query.setParameter("username", username);
+
+        try {
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
