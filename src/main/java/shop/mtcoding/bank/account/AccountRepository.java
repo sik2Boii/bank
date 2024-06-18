@@ -35,22 +35,39 @@ public class AccountRepository {
         }
     }
 
-    // 출금 계좌 잔액 조회 메서드
+    // 출금 계좌 잔액 조회
     public Integer amountCheck(String wNumber) {
         // JPQL 쿼리를 사용하여 Account 엔티티에서 주어진 계좌 번호로 잔액을 조회
-        Query query = em.createQuery("select balance from Account where number = :number");
+        Query query = em.createQuery("select a.balance from Account a where a.number = :number");
 
         // 쿼리 파라미터로 계좌 번호 설정
         query.setParameter("number", wNumber);
+        return (Integer) query.getSingleResult();
+    }
 
-        // 쿼리 결과를 단일 결과로 가져오기
-        Integer balance = (Integer) query.getSingleResult();
-
-        // 조회된 잔액 반환
-        return balance;
+    // 비밀번호 검증
+    public String passwordCheck(String wNumber) {
+        Query query = em.createQuery("select password from Account where number = :number");
+        query.setParameter("number", wNumber);
+        return (String) query.getSingleResult();
     }
 
     // TODO: 업데이트 메서드 필요 (JPQA)
+    public void updateWNumber(String wNumber, Integer amount){
+        Query query = em.createQuery("update Account set balance = :amount where number = :number");
+        query.setParameter("amount", amount);
+        query.setParameter("number", wNumber);
+
+        query.executeUpdate();
+    }
+
+    // 입금 계좌 업데이트
+    public void updateDNumber(String wNumber, Integer amount){
+        Query query = em.createQuery("update Account set balance = :amount where number = :number");
+        query.setParameter("amount", amount);
+        query.setParameter("number", wNumber);
+        query.executeUpdate();
+    }
 
     // 히스토리 인서트
     public void save(Account account) {

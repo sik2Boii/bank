@@ -16,8 +16,15 @@ public class AccountRepositoryTest {
     private AccountRepository accountRepository;
 
     @Test
+    public void passwordTest(){
+        String password = accountRepository.passwordCheck("1111");
+
+        System.out.println("@@@@@@@@@@@@@@" + password);
+    }
+
+    @Test
     public void findByAccountNumber() {
-        String wNumber = "1111";
+        String wNumber = "1100";
         int result = accountRepository.findByAccountNumber(wNumber);
 
         System.out.println("@@@@@@@@@@@@@: " + result);
@@ -25,8 +32,8 @@ public class AccountRepositoryTest {
 
     @Test
     public void balanceCheck() {
-        Integer balace = accountRepository.amountCheck("1111");
-        System.out.println("@@@@@@@@@@:" + balace.toString());
+        Integer balace = accountRepository.amountCheck("2222");
+        System.out.println("@@@@@@@@@@:" + balace);
     }
 
     @Test
