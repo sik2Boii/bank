@@ -16,18 +16,16 @@ public class AccountRepositoryTest {
     private AccountRepository accountRepository;
 
     @Test
-    public void passwordTest(){
+    public void passwordTest() {
         String password = accountRepository.passwordCheck("1111");
 
         System.out.println("@@@@@@@@@@@@@@" + password);
     }
 
     @Test
-    public void findByAccountNumber() {
-        String wNumber = "1100";
-        int result = accountRepository.findByAccountNumber(wNumber);
-
-        System.out.println("@@@@@@@@@@@@@: " + result);
+    public void findByNumber() {
+        String number = "1111";
+        accountRepository.findByAccount(number);
     }
 
     @Test

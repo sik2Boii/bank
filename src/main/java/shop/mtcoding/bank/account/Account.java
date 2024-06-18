@@ -30,7 +30,7 @@ public class Account {
     private Integer balance; // 잔액
 
     // FK
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user; // hibernate - orm 기술
 }
 

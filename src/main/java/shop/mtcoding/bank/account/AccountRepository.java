@@ -1,7 +1,6 @@
 package shop.mtcoding.bank.account;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,23 +15,22 @@ public class AccountRepository {
     private final EntityManager em;
 
     // 계좌 번호로 계좌 조회 필요 (JPQL)
-    public int findByAccountNumber(String number) {
-        try {
-            // JPQL 쿼리를 사용하여 Account 엔티티에서 주어진 계좌 번호로 계좌를 조회
-            Query query = em.createQuery("select number from Account where number = :number");
+    public Account findByAccount(String number) {
+        // JPQL 쿼리를 사용하여 Account 엔티티에서 주어진 계좌 번호로 계좌를 조회
+        Query query = em.createQuery("select ac from Account ac where number = :number", Account.class);
+        // 쿼리 파라미터로 계좌 번호 설정
+        query.setParameter("number", number);
+        // 쿼리 결과를 단일 결과로 가져오기
+        Account account = (Account) query.getSingleResult();
+        return account;
+    }
 
-            // 쿼리 파라미터로 계좌 번호 설정
-            query.setParameter("number", number);
+    public Account findByNumberJoinUser(String number) {
+        Query query = em.createQuery("select ac from Account ac join fetch ac.user where ac.number=:number", Account.class);
+        query.setParameter("number", number);
 
-            // 쿼리 결과를 단일 결과로 가져오기
-            Object result = query.getSingleResult();
-
-            // 결과가 있으면 1 반환
-            return 1;
-        } catch (NoResultException e) {
-            // 결과가 없으면 0 반환
-            return 0;
-        }
+        Account account = (Account) query.getSingleResult();
+        return account;
     }
 
     // 출금 계좌 잔액 조회
@@ -53,7 +51,7 @@ public class AccountRepository {
     }
 
     // TODO: 업데이트 메서드 필요 (JPQA)
-    public void updateWNumber(String wNumber, Integer amount){
+    public void updateWNumber(String wNumber, Integer amount) {
         Query query = em.createQuery("update Account set balance = :amount where number = :number");
         query.setParameter("amount", amount);
         query.setParameter("number", wNumber);
@@ -62,7 +60,7 @@ public class AccountRepository {
     }
 
     // 입금 계좌 업데이트
-    public void updateDNumber(String wNumber, Integer amount){
+    public void updateDNumber(String wNumber, Integer amount) {
         Query query = em.createQuery("update Account set balance = :amount where number = :number");
         query.setParameter("amount", amount);
         query.setParameter("number", wNumber);

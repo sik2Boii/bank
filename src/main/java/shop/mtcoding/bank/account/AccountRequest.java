@@ -7,8 +7,8 @@ public class AccountRequest {
 
     @Data
     public static class TransferDTO {
-        private Integer wNumber;
-        private Integer dNumber;
+        private String wNumber;
+        private String dNumber;
         private Integer amount;
         private String password;
     }
